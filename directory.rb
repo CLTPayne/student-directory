@@ -340,7 +340,6 @@ students = input_students
 print_header
 print(students)
 print_footer(students)
-=end
 
 # Ask user for cohort as well as student name and set a default month if left blank
 def input_students
@@ -383,6 +382,96 @@ def print(students)
   while students.length > students_index do
     puts "#{students_index + 1}. #{students[students_index][:name]} (#{students[students_index][:cohort]} cohort)".center(50)
     students_index += 1
+  end
+end
+
+def print_students_beginning_with(students)
+  puts "What letter who you like: "
+  letter = gets.chomp
+  students.each do |student|
+    if student[:name].chars[0] == letter.upcase
+    puts "#{student[:name]} (#{student[:cohort]} cohort)"
+    end
+  end
+end
+
+ def print_students_less_than_twelve_chars(students)
+   students.each do |student|
+     if student[:name].length < 12
+     puts "#{student[:name]} (#{student[:cohort]} cohort)"
+     end
+   end
+end
+
+def print_footer(students)
+  puts "Overall, we have #{students.count} great students".center(50)
+end
+students = input_students
+# nothing happens until we call the methods
+print_header
+print(students)
+print_footer(students)
+=end
+
+# Print the list ordered by cohort month (not name)
+def input_students
+  puts "Please enter the names of the students"
+  puts "To finish, just hit return three times"
+  name = gets.chomp
+  # ask for cohort month
+  puts "Please enter the cohort of the student"
+  cohort = gets.chomp
+  # check for valid spelling of a month
+  valid_cohort = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
+  # create an empty array
+  students = []
+  # while the name is not empty, repeat this code
+  while !name.empty? do
+    # provide a default value for no month of misspelt month
+    if cohort.empty?
+      cohort = "may"
+    elsif !valid_cohort.include?(cohort.downcase)
+      cohort = "may"
+    end
+    # add the student hash to the array
+    students << {name: name, cohort: cohort.downcase.to_sym}
+    puts "Now we have #{students.count} students"
+    name = gets.chomp
+    cohort = gets.chomp
+    # get another name from the user
+  end
+  # return the array of students
+  students
+end
+
+def print_header
+  puts "The students of Villains Academy".center(50)
+  puts "-------------".center(50)
+end
+
+def print(students)
+  # create a new array of just the cohort info from students
+  cohort = []
+  #map to iterate over the students array and extract the cohort values from the students array in a new array
+  students.map { | student| cohort << student[:cohort] }
+  # remove any duplicates from the cohort array
+  alphabetical_cohort = cohort.sort!
+  current_cohort = alphabetical_cohort.uniq
+  # set a counter so that you can iterate through the cohorts array
+  current_cohort_index = 0
+  # loop over the current_cohort array to print each month for the students.
+  while current_cohort_index < current_cohort.length
+    puts "Students in the #{current_cohort[current_cohort_index].capitalize} cohort are:".center(50)
+        # iterate through the students array
+        students.each do |student|
+        # find the students for that particular month / value of the current_cohort array.
+          if student[:cohort] == current_cohort[current_cohort_index]
+            # print their name
+             puts student[:name].center(50)
+          end
+        end
+    # increment on on the current_cohort_index in order to move on to the next month.
+    current_cohort_index += 1
   end
 end
 
