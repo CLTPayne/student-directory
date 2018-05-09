@@ -501,9 +501,8 @@ students = input_students
 print_header
 print(students)
 print_footer(students)
-=end
 
-# Correct the message for letting user know number of students so that if one student the statement is singular. 
+# Correct the message for letting user know number of students so that if one student the statement is singular.
 def input_students
   puts "Please enter the names of the students"
   puts "To finish, just hit return three times"
@@ -553,6 +552,81 @@ end
 def print_students_beginning_with(students)
   puts "What letter who you like: "
   letter = gets.chomp
+  students.each do |student|
+    if student[:name].chars[0] == letter.upcase
+    puts "#{student[:name]} (#{student[:cohort]} cohort)"
+    end
+  end
+end
+
+ def print_students_less_than_twelve_chars(students)
+   students.each do |student|
+     if student[:name].length < 12
+     puts "#{student[:name]} (#{student[:cohort]} cohort)"
+     end
+   end
+end
+
+def print_footer(students)
+  puts "Overall, we have #{students.count} great students".center(50)
+end
+students = input_students
+# nothing happens until we call the methods
+print_header
+print(students)
+print_footer(students)
+=end
+
+# Remove chomp() and use alternative method for deleting last character of a string
+def input_students
+  puts "Please enter the names of the students"
+  puts "To finish, just hit return three times"
+  name = gets.delete "\n"
+  # ask for cohort month
+  puts "Please enter the cohort of the student"
+  cohort = gets.delete "\n"
+  # check for valid spelling of a month
+  valid_cohort = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
+  # create an empty array
+  students = []
+  # while the name is not empty, repeat this code
+  while !name.empty? do
+    # provide a default value for no month of misspelt month
+    if cohort.empty?
+      cohort = "may"
+    elsif !valid_cohort.include?(cohort.downcase)
+      cohort = "may"
+    end
+    # add the student hash to the array
+    students << {name: name, cohort: cohort.downcase.to_sym}
+      if students.count < 2
+        puts "Now we have #{students.count} student"
+      else puts "Now we have #{students.count} students"
+      end
+    name = gets.delete "\n"
+    cohort = gets.delete "\n"
+    # get another name from the user
+  end
+  # return the array of students
+  students
+end
+
+def print_header
+  puts "The students of Villains Academy".center(50)
+  puts "-------------".center(50)
+end
+
+def print(students)
+  students_index = 0
+  while students.length > students_index do
+    puts "#{students_index + 1}. #{students[students_index][:name]} (#{students[students_index][:cohort]} cohort)".center(50)
+    students_index += 1
+  end
+end
+
+def print_students_beginning_with(students)
+  puts "What letter who you like: "
+  letter = gets.delete "\n"
   students.each do |student|
     if student[:name].chars[0] == letter.upcase
     puts "#{student[:name]} (#{student[:cohort]} cohort)"
