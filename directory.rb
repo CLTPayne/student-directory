@@ -35,6 +35,7 @@ def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
   puts "3. Save the list to students.csv"
+  puts "4. Load the list from students.csv"
   puts "9. Exit" # 9 because we'll add more items
 end
 
@@ -52,6 +53,8 @@ def process(selection)
     show_students
   when "3"
     save_students
+  when "4"
+    load_students
   when "9"
     exit
   else
@@ -83,6 +86,21 @@ def save_students
     csv_line = student_data.join(",")
     file.puts csv_line
   end
+  file.close
+end
+
+def load_students
+  # open the file for reading
+  file = File.open("students.csv", "r")
+  # iterate over the contents of the file
+  file.readlines.each do |line|
+    # split every line at the comma, which gives an array with two elements, assign to the name and cohort variables.
+    # this is a parallel assignment (assigning two variables at the same time)
+    name, cohort = line.chomp.split(",")
+    # put a new hash into the @students array, with the cohort as a symbol for consistency
+    @students << {name: name, cohort: cohort.to_sym}
+  end
+  # close the file
   file.close
 end
 
