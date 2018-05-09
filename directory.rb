@@ -1,21 +1,11 @@
 @students = [] #an empty array accessible to all methods
 
-def input_students
-  puts "Please enter the names of the students"
-  puts "To finish, just hit return twice times"
-  # get the first name
-  name = gets.chomp
-  # while the name is not empty, repeat this code
-  while !name.empty? do
-    # add the student hash to the array
-    @students << {name: name, cohort: :november}
-      if @students.count < 2
-        puts "Now we have #{@students.count} student"
-      else puts "Now we have #{@students.count} students"
-      end
-      # get another name from the user
-    name = gets.chomp
-  end
+def print_menu
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "3. Save the list to students.csv"
+  puts "4. Load the list from students.csv"
+  puts "9. Exit" # 9 because we'll add more items
 end
 
 def interactive_menu
@@ -27,22 +17,8 @@ def interactive_menu
     print_menu
     # 2. read the input and save it into a variable
     # 3. do what the user has asked
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
-end
-
-def print_menu
-  puts "1. Input the students"
-  puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
-  puts "9. Exit" # 9 because we'll add more items
-end
-
-def show_students
-  print_header
-  print_students_list
-  print_footer
 end
 
 def process(selection)
@@ -60,6 +36,30 @@ def process(selection)
   else
     puts "I don't know what you meant, try again"
   end
+end
+
+def input_students
+  puts "Please enter the names of the students"
+  puts "To finish, just hit return twice times"
+  # get the first name
+  name = STDIN.gets.chomp
+  # while the name is not empty, repeat this code
+  while !name.empty? do
+    # add the student hash to the array
+    @students << {name: name, cohort: :november}
+      if @students.count < 2
+        puts "Now we have #{@students.count} student"
+      else puts "Now we have #{@students.count} students"
+      end
+      # get another name from the user
+    name = STDIN.gets.chomp
+  end
+end
+
+def show_students
+  print_header
+  print_students_list
+  print_footer
 end
 
 def print_header
@@ -89,9 +89,9 @@ def save_students
   file.close
 end
 
-def load_students
+def load_students(filename = "students.csv")
   # open the file for reading
-  file = File.open("students.csv", "r")
+  file = File.open(filename, "r")
   # iterate over the contents of the file
   file.readlines.each do |line|
     # split every line at the comma, which gives an array with two elements, assign to the name and cohort variables.
@@ -104,6 +104,19 @@ def load_students
   file.close
 end
 
+def try_load_students
+  filename = ARGV.first # first arguement from the command line
+  return if filename.nil? # get out of this method if it isn't given
+  if File.exists? (filename) #if it exists
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else # if it doesn't exist
+    puts "Sorry #{filename} doesn't exist."
+    exit # quit the program
+  end
+end
+
+try_load_students
 interactive_menu
 
 # ----- OTHER VERSIONS AS PER THE TASKS ----------
