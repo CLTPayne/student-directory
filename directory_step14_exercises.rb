@@ -87,30 +87,31 @@ def print_students_footer
 end
 
 def save_students(filename = "students.csv")
-  # open the file for writing
-  file = File.open(filename, "w")
+  # open the file for writing, with a block so don't need to explicitly close the file.
+  file = File.open(filename, "w") do |file|
   # iterate over the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort]]
+      csv_line = student_data.join(",")
+      file.puts csv_line
+    end
   end
-  file.close
 end
 
 def load_students(filename = "students.csv")
   # open the file for reading
-  file = File.open(filename, "r")
+  file = File.open(filename, "r") do |file|
   # iterate over the contents of the file
-  file.readlines.each do |line|
+    file.readlines.each do |line|
     # split every line at the comma, which gives an array with two elements, assign to the name and cohort variables.
     # this is a parallel assignment (assigning two variables at the same time)
-    name, cohort = line.chomp.split(",")
+      name, cohort = line.chomp.split(",")
     # put a new hash into the @students array, with the cohort as a symbol for consistency
-    add_students(name, cohort)
-  end
+      add_students(name, cohort)
+    end
   # close the file
-  file.close
+  end
+  # file.close # if you don't use a block to open a file (above)
 end
 
 def add_students(name, cohort)
