@@ -268,5 +268,18 @@ def try_load_students
   end
 end
 
+def print_source_code
+  # Tell the user the file you're going to print for.
+  puts "Printing code for #{$0}:"
+  # Create a variable of the file and open it with a block
+  source_code = File.open($0, "r") do |file|
+    # read each line
+    file.readlines
+  end
+  # print the file
+  puts source_code
+end
+
+# print_source_code
 # try_load_students
 interactive_menu
